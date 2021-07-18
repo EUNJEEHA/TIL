@@ -540,7 +540,368 @@ $ git log --all --graph --oneline
 
 ### 
 
-## 4. 같은 파일명을 병합
+## 4. 같은 파일 내 병합
+
+### 4-1. 같은 파일, 다른 부분 병합
+
+```shell
+USER@CT128 MINGW64 ~/til (master)
+$ cd ~
+: home으로 이동
+
+USER@CT128 MINGW64 ~
+$ git init manual-merge
+Initialized empty Git repository in C:/Users/USER/manual-merge/.git/
+: 'manual-merge'폴더 생성 후 초기화
+
+USER@CT128 MINGW64 ~
+$ cd manual-merge
+: 'manual-merge'폴더로 이동
+
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ vim work.txt
+: 'work.txt'파일 생성
+	title
+	content
+	
+	title
+	content 글 추가
+	
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ git add work.txt
+warning: LF will be replaced by CRLF in work.txt.
+The file will have its original line endings in your working directory
+: 'git add'
+
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ git commit -m "1"
+[master (root-commit) 21cddf1] 1
+ 1 file changed, 6 insertions(+)
+ create mode 100644 work.txt
+: 'git commit'
+
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ git log
+commit 21cddf1d5793fc6c7b0f6fdc2939c30f784eac4e (HEAD -> master)
+Author: Eunji Ha <haej94@gmail.com>
+Date:   Sun Jul 18 21:38:12 2021 +0900
+
+    1
+: 'git log'
+
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ vim work.txt
+: 현재 master상태. 'work.txt'파일을 변경
+	title
+	master content
+	
+	title
+	content
+
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ git branch o2
+: 'o2' 브렌치 생성
+
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ git commit -am "master work 2"
+warning: LF will be replaced by CRLF in work.txt.
+The file will have its original line endings in your working directory
+[master bf3113d] master work 2
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+: 'git add & commit'
+
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ git checkout o2
+Switched to branch 'o2'
+: o2 브렌치로 이동
+
+USER@CT128 MINGW64 ~/manual-merge (o2)
+$ vim work.txt
+: 현재 o2 브렌치 상태. 'work.txt'파일을 변경
+	title
+	content
+	
+	title
+	o2 content
+	
+USER@CT128 MINGW64 ~/manual-merge (o2)
+$ git add work.txt
+: 'git add'
+
+USER@CT128 MINGW64 ~/manual-merge (o2)
+$ git commit -m "o2 work 2"
+[o2 ea66d1d] o2 work 2
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+: 'git commit'
+
+USER@CT128 MINGW64 ~/manual-merge (o2)
+$ git log --all --graph --oneline
+* ea66d1d (HEAD -> o2) o2 work 2
+| * bf3113d (master) master work 2
+|/
+* 21cddf1 1
+: 브렌치 그래프 완성
+
+USER@CT128 MINGW64 ~/manual-merge (o2)
+$ git checkout master
+Switched to branch 'master'
+: 'master'브렌치로 이동 (master에 o2를 병합)
+
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ git merge o2
+Auto-merging work.txt
+Merge made by the 'recursive' strategy.
+ work.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+: master에 o2를 merge
+
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ git log --all --graph --oneline
+*   220dd03 (HEAD -> master) Merge branch 'o2'
+|\
+| * ea66d1d (o2) o2 work 2
+* | bf3113d master work 2
+|/
+* 21cddf1 1
+: 그래프 참고
+
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ cat work.txt
+# title
+master content
+
+
+# title
+o2 content
+: 같은 파일의 서로 다른 부분을 수정한 후 merge하면
+두 부분이 다 반영이 되어 합쳐진다.
+```
+
+### 4-2. 같은 파일, 같은 부분 병합
+
+> 같은 파일의 같은 부분을 서로 다른 브렌치에서 수정한 후 merge시키면,
+>
+> git은 자동으로 병합하지 못한다. 이를 'conflic(충돌)'이라고 한다.
+
+```shell
+USER@CT128 MINGW64 ~/manual-merge
+$ cd ~
+: home으로 이동
+
+USER@CT128 MINGW64 ~
+$ ls
+'3D Objects'/
+ AppData/
+'Application Data'@
+ Contacts/
+ Cookies@
+ Desktop/
+ Documents/
+ Downloads/
+ Favorites/
+ IntelGraphicsProfiles/
+ Jedi/
+ Links/
+'Local Settings'@
+ Music/
+'My Documents'@
+ NTUSER.DAT
+ NTUSER.DAT{fd9a35db-49fe-11e9-aa2c-248a07783950}.TM.blf
+ NTUSER.DAT{fd9a35db-49fe-11e9-aa2c-248a07783950}.TMContainer00000000000000000001.regtrans-ms
+ NTUSER.DAT{fd9a35db-49fe-11e9-aa2c-248a07783950}.TMContainer00000000000000000002.regtrans-ms
+ NetHood@
+ OneDrive/
+ Pictures/
+ PrintHood@
+ PycharmProjects/
+ Recent@
+'Saved Games'/
+ Searches/
+ SendTo@
+ Templates@
+ Videos/
+ campus/
+ git-test/
+ house/
+ manual/
+ ntuser.dat.LOG1
+ ntuser.dat.LOG2
+ ntuser.ini
+ push-practice/
+ recap/
+ test.ipynb
+ test.py
+ test.txt
+ til/
+'시작 메뉴'@
+: home의 모든 파일 확인
+
+USER@CT128 MINGW64 ~
+$ git init manual-merge
+Initialized empty Git repository in C:/Users/USER/manual-merge/.git/
+: 'manual-merge'폴더 생성 및 초기화
+
+USER@CT128 MINGW64 ~
+$ cd manual-merge
+: 'manual-merge'파일로 이동
+
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ vim work.txt
+: 'work.txt'파일 생성 후 텍스트 추가
+	#Title
+	content
+	
+	#Title
+	content
+	
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ git add work.txt
+warning: LF will be replaced by CRLF in work.txt.
+The file will have its original line endings in your working directory
+: 'git add'
+
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ git commit -m "work 1"
+[master (root-commit) 9923fa6] work 1
+ 1 file changed, 5 insertions(+)
+ create mode 100644 work.txt
+: 'git commit'
+
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ git branch o2
+: 'o2'브렌치 생성
+
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ git log --all --graph --oneline
+* 9923fa6 (HEAD -> master, o2) work 1
+: 브렌치 확인
+
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ vim work.txt
+: master상태에서 'work.txt'파일의 텍스트 수정
+	#Title
+	content
+	master
+	#Title
+	content
+	
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ git commit -am "master work 2"
+warning: LF will be replaced by CRLF in work.txt.
+The file will have its original line endings in your working directory
+[master a114127] master work 2
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+: 'git add & commit'
+
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ git checkout o2
+Switched to branch 'o2'
+: 'o2'브렌치로 이동
+
+USER@CT128 MINGW64 ~/manual-merge (o2)
+$ vim work.txt
+: o2상태에서 'work.txt'파일의 텍스트 수정
+	#Title
+	content
+	o2
+	#Title
+	content
+	
+USER@CT128 MINGW64 ~/manual-merge (o2)
+$ git add work.txt
+: 'git add'
+
+USER@CT128 MINGW64 ~/manual-merge (o2)
+$ git commit -m "o2 work 2"
+[o2 bff1bd6] o2 work 2
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+: 'git commit'
+
+USER@CT128 MINGW64 ~/manual-merge (o2)
+$ git log --all --graph --oneline
+* bff1bd6 (HEAD -> o2) o2 work 2
+| * a114127 (master) master work 2
+|/
+* 9923fa6 work 1
+: master와 o2 브렌치 확인
+
+USER@CT128 MINGW64 ~/manual-merge (o2)
+$ git checkout master
+Switched to branch 'master'
+: master브렌치로 이동
+
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ git merge o2
+Auto-merging work.txt
+CONFLICT (content): Merge conflict in work.txt
+Automatic merge failed; fix conflicts and then commit the result.
+: 'master'에 'o2'를 merge
+
+USER@CT128 MINGW64 ~/manual-merge (master|MERGING)
+$ git status
+On branch master
+You have unmerged paths.
+  (fix conflicts and run "git commit")
+  (use "git merge --abort" to abort the merge)
+
+Unmerged paths:
+  (use "git add <file>..." to mark resolution)
+        both modified:   work.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+: conflict 발생
+
+USER@CT128 MINGW64 ~/manual-merge (master|MERGING)
+$ vim work.txt
+: 충돌한 부분 수정
+	#Title
+	content
+	master, o2
+	#Title
+	content
+	
+USER@CT128 MINGW64 ~/manual-merge (master|MERGING)
+$ git add work.txt
+: 수정한 충돌 부분 'git add'
+
+USER@CT128 MINGW64 ~/manual-merge (master|MERGING)
+$ git status
+On branch master
+All conflicts fixed but you are still merging.
+  (use "git commit" to conclude merge)
+
+Changes to be committed:
+        modified:   work.txt
+: 계속해서 merge하려면 'git commit'실행
+
+USER@CT128 MINGW64 ~/manual-merge (master|MERGING)
+$ git commit
+[master a962728] Merge branch 'o2'
+: 'git commit'실행하여 master에 o2 merge 성공
+
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ git log --all --graph --oneline
+*   a962728 (HEAD -> master) Merge branch 'o2'
+|\
+| * bff1bd6 (o2) o2 work 2
+* | a114127 master work 2
+|/
+* 9923fa6 work 1
+: merge된 새로운 브렌치 탄생
+
+USER@CT128 MINGW64 ~/manual-merge (master)
+$ vim work.txt
+: 수정된 work.txt 내용 확인
+```
+
+## 5. CONFLICT 2WAY MERGE
+
+> git은 어떻게 충돌을 파악하는가
+
+### 5-1. 
+
+```
+```
 
 
 
@@ -548,5 +909,17 @@ $ git log --all --graph --oneline
 
 
 
-## 5. 
+## 6. 
+
+
+
+
+
+
+
+
+
+
+
+
 
