@@ -894,32 +894,56 @@ $ vim work.txt
 : 수정된 work.txt 내용 확인
 ```
 
-## 5. CONFLICT 2WAY MERGE
+## 5. CONFLICT 3WAY MERGE
 
 > git은 어떻게 충돌을 파악하는가
+>
+> 서로 다른 2개의 브렌치(here, there)와 그 공통의 부모인 base를 비교
 
-### 5-1. 
+### 5-1. 외부 도구를 이용한 병합
 
-```
-```
+> 'p4merge' 프로그램 다운로드
 
+​		__-> 다운받지 않음. 병합 도구를 더 찾아보고 나서 다운로드 할 것__
 
+| there | base | here |  merge   |
+| :---: | :--: | :--: | :------: |
+|   A   |  A   |  A   |    A     |
+|   B   |  B   |  H   |    H     |
+|   T   |  C   |  C   |    T     |
+|   T   |  D   |  H   | T? D? H? |
 
+* here브렌치와 there브렌치를 merge 한다면,
 
+  ​	마지막 행에서 충돌이 발생하여 수동으로 수정해야함
 
+* 이것까지 자동화 하고 싶다면, 외부 도구를 다운로드 해야 함
 
+* 그 중에서도 'p4merge' 프로그램
 
-## 6. 
+## 6. 다음 공부 내용
 
+* git workflow 키워드 검색 - git flow소프트웨어 : 개발자들에게 널리 채택된 모범 사례
+* cherry-pick :  부분적 병합 기능
+* rebase : merge와 같지만, 더 깔끔한 타임라인. 새 base 생성
 
+## 7. 부록
 
+### 7-1. HEAD BRANCH COMMIT & CHECKOUT
 
+* (HEAD -> master) : 현재 저장소의 위치가 master임을 알 수 있음
+* master를 통해서 __현재 버전__을 알 수 있다
+* 브렌치를 생성하면, master를 통해 알아낸 __현재 버전__에서 시작된다
+* `git checkout google`을 통해 현재 어느 저장소에 있는 것인지, 최신 버전은 무엇인지 알 수 있다 : (HEAD -> google)
+* __`checkout`은 결국, HEAD값을 바꾸는 것!__
+* __HEAD가 branch를 가리키지 않고 직접 commit(버전)을 가리킬 수 있다 : detached 상태__
 
+### 7-2. checkout vs reset
 
+> 어려운 부분이어서 봐도 좋고 넘어가도 좋음
 
-
-
-
+* checkout은 HEAD를 제어 : `checkout branch`
+* reset은 branch를 제어 : `reset 버전이름`
 
 
 
