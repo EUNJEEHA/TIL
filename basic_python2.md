@@ -200,7 +200,7 @@ tuple4 = 10,
     tuple6.count('a')  -> 1
     ```
 
-# 5. 딕셔너리(Dictionary)
+## 5. 딕셔너리(Dictionary)
 
 > 키(key) : 값(value)
 
