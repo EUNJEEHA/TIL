@@ -79,15 +79,64 @@ print("Tom is my friend.", end = "")
 print("He is Korean.")
 ```
 
+### 2-2. 형식 지정 출력
 
+* 나머지 연산자(%)를 이용
 
+```python
+name = "Tom"
+age = 25
+print("%s은 내 친구야. %i살이지." % (name,age))
+```
 
+* 형식 지졍 문자열 :  .format()
 
+```python
+animal0 = "cat"
+animal1 = "dog"
+animal2 = "fox"
+print("animals : {0},{1},{2}".format(animal0,animal1,animal2))
+```
 
+* 순차적이라면, {N}에 N없이 {}만 써도 가능
 
+```python
+animal0 = "cat"
+animal1 = "dog"
+animal2 = "fox"
+print("animals : {},{},{}".format(animal0,animal1,animal2))
 
+# 신기하지만, 헷갈릴 수 있으니 실전에서는 꼭 숫자를 넣자!
+```
 
-## 3. 
+* 문자 출력 위치 지정
+
+```python
+name = "Tom"
+age = 10
+a = 0.1234567891234
+fmt_string = "String: {0}, Integer Number: {1}, Floating Number: {2}"
+print(fmt_string.format(name,age,a))
+```
+
+* 숫자 출력 형식 지정
+
+```python
+a = 0.1234567891234
+print("{0:.2f}, {0:.5f}".format(a))
+```
+
+### 2-3. input()
+
+```python
+myfruit = input("좋아하는 과일은?")
+print("당신은 {}을 좋아하는 군요!".format(myfruit))
+
+a = int(input("정사각형의 한 변의 길이는?"))
+print("정사각형의 넓이는 {}입니다.".format(a**2))
+```
+
+## 3. 파일 읽고 쓰기
 
 
 
