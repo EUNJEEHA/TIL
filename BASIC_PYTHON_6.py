@@ -66,27 +66,3 @@ with open(file="myfile.txt",mode="w",encoding="utf8") as file:
 
 with open(file="myfile.txt",mode="a",encoding="utf8") as file:  # 같은 파일이 있을 경우 끝 부분 부터 이어짐
     file.write("\n새로운 데이터")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
